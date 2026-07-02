@@ -254,6 +254,15 @@ body{font-family:var(--font);background:#fff;color:var(--ink);-webkit-font-smoot
 .dcard .fn{color:#C7B6FF}
 .dcard .cap-b{text-align:center;margin-top:26px;color:var(--navy);font-weight:700;font-size:17px;position:relative;z-index:2}
 .dcard .cap-b em{color:var(--ember);font-style:normal}
+/* structured output: 입력 JSON + 도구 아웃풋 2패널 */
+.dcard .sout{display:flex;flex-direction:column;gap:12px}
+.dcard .sout .code{padding:16px 22px;font-size:15.5px;line-height:1.55}
+.dcard .out{background:#F1F5FB;border:1.5px solid #D2DEEF;border-radius:14px;padding:13px 20px}
+.dcard .out .hd{font-family:'Pretendard',sans-serif;color:#5E7096;font-size:13.5px;font-weight:700;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid #DCE5F2;letter-spacing:.02em}
+.dcard .out .row{display:flex;align-items:baseline;gap:8px;font-size:16px;color:var(--ink);line-height:1.5;margin-top:3px}
+.dcard .out .ok{color:#2E9E6B;font-weight:800}
+.dcard .out .kv{font-family:'SF Mono',ui-monospace,Menlo,monospace;color:var(--navy);font-weight:700;white-space:nowrap}
+.dcard .out .nx{color:var(--ember);font-weight:700;white-space:nowrap}
 .dcard .classify{display:flex;align-items:center;gap:44px;margin-top:48px;position:relative;z-index:2}
 .dcard .ctag{display:inline-block;font-weight:800;border-radius:20px;padding:6px 20px;font-size:20px;margin-bottom:18px}
 .dcard .navy-tag{background:var(--navy);color:#fff}
@@ -561,15 +570,23 @@ body{font-family:var(--font);background:#fff;color:var(--ink);-webkit-font-smoot
       <svg width="56" height="26" viewBox="0 0 56 26"><path d="M2 13h46M40 5l10 8-10 8" fill="none" stroke="#3A5BA0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
 
-    <div class="code dstep" style="--i:5">
-      <div class="hd">scorecard_tool — 항상 같은 형식의 평가 기록</div>
-<span class="fn">scorecard_tool</span>(<br>
-&nbsp;&nbsp;<span class="k">action</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="s">"record"</span>,<br>
-&nbsp;&nbsp;<span class="k">question_id</span> = <span class="s">"A1"</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># 물리적 고립</span><br>
-&nbsp;&nbsp;<span class="k">status</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="s">"positive"</span>,&nbsp;<span class="c"># 충족</span><br>
-&nbsp;&nbsp;<span class="k">value</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="s">"집에 대부분 체류, 외출 거의 없음"</span>,<br>
-&nbsp;&nbsp;<span class="k">rationale</span>&nbsp;&nbsp;= <span class="s">"작년 여름부터 알바 외 외출 없음"</span>,<br>
-)
+    <div class="sout">
+      <div class="code dstep" style="--i:5">
+        <div class="hd">LLM 출력 · 구조화된 JSON <span class="fn">scorecard_tool</span></div>
+{<br>
+&nbsp;&nbsp;<span class="k">"action"</span>: <span class="s">"record"</span>,<br>
+&nbsp;&nbsp;<span class="k">"question_id"</span>: <span class="s">"A1"</span>,&nbsp;&nbsp;<span class="c">// 물리적 고립</span><br>
+&nbsp;&nbsp;<span class="k">"status"</span>: <span class="s">"positive"</span>,&nbsp;&nbsp;<span class="c">// 충족</span><br>
+&nbsp;&nbsp;<span class="k">"value"</span>: <span class="s">"집에 대부분 체류, 외출 거의 없음"</span>,<br>
+&nbsp;&nbsp;<span class="k">"rationale"</span>: <span class="s">"작년 여름부터 알바 외 외출 없음"</span><br>
+}
+      </div>
+      <div class="out dstep" style="--i:6">
+        <div class="hd">도구 실행 결과 · 아웃풋</div>
+        <div class="row"><span class="ok">✓</span><span>A1 기입 완료 → 평가표에 반영</span></div>
+        <div class="row"><span class="kv">A1 = positive</span><span>· "집에 대부분 체류…"</span></div>
+        <div class="row"><span class="nx">다음 질문 →</span><span>A2 (외출 빈도)</span></div>
+      </div>
     </div>
   </div>
   </div></div>
