@@ -114,6 +114,9 @@ body{font-family:var(--font);background:#fff;color:var(--ink);-webkit-font-smoot
 .cover .meta{position:absolute;left:var(--slide-padding);right:var(--slide-padding);bottom:clamp(1.6rem,4vh,3rem);display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;z-index:2}
 .cover .meta .org{color:var(--navy);font-weight:800;font-size:clamp(1rem,1.8vw,1.35rem)}
 .cover .meta .when{color:var(--mut);font-size:var(--small-size);text-align:right;line-height:1.5}
+.cover .qr{position:absolute;top:clamp(1.8rem,4.5vh,3.2rem);right:var(--slide-padding);z-index:2;text-align:center}
+.cover .qr img{width:clamp(5.5rem,10vw,8.5rem);height:auto;display:block;margin:0 auto}
+.cover .qr span{display:block;margin-top:.45rem;color:var(--mut);font-size:clamp(.6rem,.9vw,.8rem);font-family:Arial,var(--font)}
 
 /* ===========================================
    참고문헌
@@ -350,6 +353,7 @@ body{font-family:var(--font);background:#fff;color:var(--ink);-webkit-font-smoot
 <!-- ============ 1. 표지 ============ -->
 <section class="slide cover">
   <div class="topbar"></div>
+  <div class="qr reveal"><img src="slide_images/qr_talk.png" alt="QR — taoreunda.github.io/talk"><span>taoreunda.github.io/talk</span></div>
   <span class="pill reveal">2026 세계인문사회학술대회 · 소버린 AI</span>
   <h1 class="reveal">사회적 고립의 측정과 예측</h1>
   <div class="csub reveal">고전적 심리평가와 AI기반 평가</div>
