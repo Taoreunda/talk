@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사회적 고립의 측정과 예측 — 발표 덱</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+/* ===========================================
+   THEME (navy research — pptx와 동일 계열)
+   =========================================== */
+:root{
+  --navy:#1B2A57; --navy2:#274079; --blue:#3E5C99;
+  --ice:#C9D8F0; --ice2:#E8EFFA; --orange:#E8743B;
+  --ink:#1D2433; --mut:#5B6B86; --line:#D7E0F0; --refc:#9AA7BD;
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --title-size: clamp(2.2rem, 5.6vw, 4.4rem);
+  --h2-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  --body-size: clamp(1rem, 1.9vw, 1.5rem);
+  --small-size: clamp(0.8rem, 1.25vw, 1.05rem);
+  --slide-padding: clamp(1.4rem, 4.5vw, 4.2rem);
+  --ease: cubic-bezier(0.16,1,0.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* --- viewport-base.css --- */
+html{height:100%;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+body{overflow-x:clip}
+.slide{width:100vw;height:100vh;height:100dvh;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;position:relative}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}html{scroll-behavior:auto}}
+
+body{font-family:var(--font);background:#fff;color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ===========================================
+   REVEAL ANIMATION (staggered fade-up)
+   =========================================== */
+.reveal{opacity:0;transform:translateY(28px) scale(.985);filter:blur(6px);transition:opacity .7s var(--ease), transform .7s var(--ease), filter .7s var(--ease)}
+.slide.visible .reveal{opacity:1;transform:none;filter:blur(0)}
+.slide.visible .reveal:nth-child(1){transition-delay:.06s}
+.slide.visible .reveal:nth-child(2){transition-delay:.15s}
+.slide.visible .reveal:nth-child(3){transition-delay:.24s}
+.slide.visible .reveal:nth-child(4){transition-delay:.33s}
+.slide.visible .reveal:nth-child(5){transition-delay:.42s}
+.slide.visible .reveal:nth-child(6){transition-delay:.51s}
+.slide.visible .r2{transition-delay:.2s}
+
+/* ===========================================
+   하단 물결 (ice 오벌 2겹) — pptx 모티프
+   =========================================== */
+.wave{position:absolute;left:-18%;right:-18%;bottom:calc(-1 * clamp(8vh,10vh,12vh));height:clamp(20vh,24vh,26vh);pointer-events:none;z-index:0}
+.wave::before,.wave::after{content:"";position:absolute;left:0;right:0;height:100%;border-radius:50%}
+.wave::before{background:var(--ice2);bottom:clamp(.8vh,1.4vh,2vh)}
+.wave::after{background:var(--ice);bottom:0}
+
+/* ===========================================
+   레이아웃 (텍스트 슬라이드 공통)
+   =========================================== */
+.pad{flex:1;display:flex;flex-direction:column;padding:var(--slide-padding);position:relative;z-index:2;min-height:0}
+.ahead{display:flex;align-items:flex-start;gap:clamp(.7rem,1.3vw,1.1rem);margin-bottom:clamp(1rem,2.6vh,2rem)}
+.badge{flex:0 0 auto;width:clamp(2.6rem,4vw,3.4rem);height:clamp(2.6rem,4vw,3.4rem);border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:clamp(.9rem,1.5vw,1.25rem);display:grid;place-items:center;font-family:Arial,var(--font)}
+.sec{color:var(--blue);font-weight:700;font-size:var(--small-size);letter-spacing:.14em;margin-bottom:.15rem}
+.s-title{color:var(--navy);font-weight:800;font-size:var(--h2-size);line-height:1.15}
+.uline{display:none}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.sref{position:absolute;left:var(--slide-padding);bottom:clamp(1rem,2.5vh,1.8rem);color:var(--refc);font-size:var(--small-size);z-index:2}
+
+/* 불릿 */
+.bullets{list-style:none;display:flex;flex-direction:column;gap:clamp(.8rem,2.4vh,1.7rem);max-width:68rem}
+.bullets li{position:relative;padding-left:1.5em;font-size:var(--body-size);line-height:1.4;color:var(--ink)}
+.bullets li::before{content:"";position:absolute;left:0;top:.55em;width:.5em;height:.5em;border-radius:50%;background:var(--navy)}
+.bullets li b{color:var(--navy)}
+.bullets li .em{color:var(--orange);font-weight:700}
+
+/* 카드 */
+.cards{display:flex;gap:clamp(.8rem,1.8vw,1.4rem);align-items:stretch}
+.card{flex:1;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 34px rgba(27,42,87,.09);padding:clamp(1rem,2.4vw,1.8rem);display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:clamp(.6rem,1.4vh,1.1rem)}
+.card.soft{background:var(--ice2);border:none;box-shadow:none;align-items:flex-start;text-align:left;justify-content:flex-start}
+.card .cimg{width:100%;max-height:min(28vh,210px);object-fit:contain}
+.card .big{font-family:Arial,var(--font);font-weight:800;font-size:clamp(2.2rem,5vw,3.6rem);color:var(--navy);line-height:1}
+.card .ctxt{font-size:var(--body-size);line-height:1.35;color:var(--ink)}
+.card .ctxt b{color:var(--navy)} .card .ctxt .em{color:var(--orange);font-weight:800}
+.card .chead{font-weight:800;font-size:clamp(1.15rem,2.2vw,1.65rem);color:var(--navy)}
+.card .csub{font-size:var(--small-size);color:var(--mut);margin-top:-.3rem}
+.card .clist{list-style:none;display:flex;flex-direction:column;gap:clamp(.5rem,1.3vh,.95rem);margin-top:.3rem}
+.card .clist li{position:relative;padding-left:1.4em;font-size:var(--body-size);line-height:1.35}
+.card .clist li::before{content:"";position:absolute;left:0;top:.55em;width:.45em;height:.45em;border-radius:50%;background:var(--blue)}
+.compare-cap{text-align:center;margin-top:clamp(.9rem,2.2vh,1.6rem);font-size:clamp(1.05rem,2vw,1.45rem);color:var(--mut)}
+.compare-cap b{color:var(--navy);font-weight:800}
+
+/* 이미지 슬라이드 (도식) */
+.img-slide{background:#fff;justify-content:center;align-items:center}
+.img-slide img{width:100vw;height:100vh;height:100dvh;max-height:none;object-fit:contain;opacity:0;transform:scale(1.035);transition:opacity .8s var(--ease), transform 1s var(--ease)}
+.slide.visible.img-slide img{opacity:1;transform:scale(1)}
+
+/* 11쪽 플로우(헤더+그래픽) */
+.flowimg{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.flowimg .livelink{position:relative;display:inline-block;line-height:0;cursor:pointer}
+.flowimg img{max-width:74rem;max-height:62vh;object-fit:contain;border-radius:6px;transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+.flowimg .livelink:hover img{transform:scale(1.012);box-shadow:0 12px 44px rgba(27,42,87,.2)}
+.live-badge{position:absolute;top:.7rem;right:.7rem;background:var(--orange);color:#fff;font-weight:700;font-size:.72rem;padding:.32em .85em;border-radius:2em;box-shadow:0 4px 14px rgba(232,116,59,.45);pointer-events:none;line-height:1.25}
+
+/* ===========================================
+   표지
+   =========================================== */
+.cover{justify-content:center;padding:var(--slide-padding)}
+.cover .topbar{position:absolute;top:0;left:0;right:0;height:clamp(6px,1vh,11px);background:linear-gradient(90deg,var(--navy),var(--blue) 55%,var(--orange));z-index:2;transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease) .1s}
+.cover.visible .topbar{transform:scaleX(1)}
+.cover .pill{display:inline-block;align-self:flex-start;background:var(--navy);color:#fff;font-weight:700;font-size:var(--small-size);padding:.55em 1.3em;border-radius:2em;margin-bottom:clamp(1rem,2.5vh,2rem);z-index:2;position:relative}
+.cover h1{color:var(--navy);font-weight:800;font-size:var(--title-size);line-height:1.1;z-index:2;position:relative;background:linear-gradient(115deg,var(--navy) 35%,var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cover .csub{color:var(--blue);font-size:clamp(1.2rem,2.7vw,1.9rem);font-weight:600;margin-top:clamp(.7rem,1.6vh,1.2rem);z-index:2;position:relative}
+.cover .cen{color:var(--mut);font-style:italic;font-size:var(--small-size);line-height:1.5;margin-top:clamp(.9rem,2vh,1.5rem);z-index:2;position:relative}
+.cover .meta{position:absolute;left:var(--slide-padding);right:var(--slide-padding);bottom:clamp(1.6rem,4vh,3rem);display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;z-index:2}
+.cover .meta .org{color:var(--navy);font-weight:800;font-size:clamp(1rem,1.8vw,1.35rem)}
+.cover .meta .when{color:var(--mut);font-size:var(--small-size);text-align:right;line-height:1.5}
+
+/* ===========================================
+   참고문헌
+   =========================================== */
+.refslide .pad{padding-top:clamp(1.6rem,4vh,3rem)}
+.reftitle{display:flex;align-items:center;gap:.8rem;margin-bottom:.4rem}
+.reftitle .dot{width:clamp(1.4rem,2.2vw,1.9rem);height:clamp(1.4rem,2.2vw,1.9rem);border-radius:50%;background:var(--navy)}
+.reftitle h2{color:var(--navy);font-weight:800;font-size:var(--h2-size)}
+.refcols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1rem,3vw,2.6rem);margin-top:clamp(.8rem,2vh,1.4rem);flex:1;min-height:0}
+.refcol h3{color:var(--blue);font-weight:700;font-size:var(--small-size);margin-bottom:.5rem}
+.refcol ul{list-style:none;display:flex;flex-direction:column;gap:clamp(.3rem,.7vh,.55rem)}
+.refcol li{font-size:clamp(.7rem,1.08vw,.92rem);line-height:1.3;color:var(--ink)}
+.refcol.en li{font-family:Arial,var(--font)}
+
+/* ===========================================
+   클로징 (감사합니다)
+   =========================================== */
+.closing{justify-content:center;align-items:center;text-align:center}
+.closing .cwrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+.closing h1{font-weight:800;font-size:var(--title-size);line-height:1.1;background:linear-gradient(115deg,var(--navy) 35%,var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.closing .ckey{margin-top:clamp(1rem,2.6vh,1.9rem);font-size:clamp(1.1rem,2.3vw,1.7rem);color:var(--blue);font-weight:600}
+.closing .ckey b{color:var(--navy);font-weight:800}
+.closing .cmeta{margin-top:clamp(1.4rem,3.4vh,2.4rem);color:var(--mut);font-size:var(--small-size)}
+
+/* ===========================================
+   내비게이션 (진행바 + 도트 + 힌트)
+   =========================================== */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--orange);width:0;z-index:50;transition:width .25s var(--ease)}
+.nav-dots{position:fixed;right:clamp(.6rem,1.5vw,1.4rem);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.55rem;z-index:50}
+.nav-dots button{width:.6rem;height:.6rem;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:all .25s}
+.nav-dots button.active{background:var(--navy);transform:scale(1.4)}
+.khint{position:fixed;bottom:.7rem;right:1rem;color:var(--refc);font-size:.7rem;z-index:50;opacity:.7}
+@media (max-height:600px){.nav-dots,.khint{display:none}}
+
+/* ===========================================
+   ANIMATION POLISH (진입 팝·플로트·마이크로 인터랙션)
+   =========================================== */
+/* 배지 팝인 */
+.badge{transition:transform .55s var(--ease) .1s, opacity .5s ease .1s}
+.slide .badge{transform:scale(.6);opacity:0}
+.slide.visible .badge{transform:scale(1);opacity:1}
+/* 하단 웨이브 은은한 부유 */
+@keyframes waveFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.slide.visible .wave{animation:waveFloat 8s ease-in-out infinite 1s}
+/* 진행바 */
+.progress{box-shadow:0 0 10px rgba(232,116,59,.5)}
+/* 내비 도트 호버 */
+.nav-dots button{transition:transform .25s var(--ease),background .25s}
+.nav-dots button:hover{transform:scale(1.35);background:var(--blue)}
+.nav-dots button.active{background:var(--navy);transform:scale(1.5)}
+/* 카드 호버 리프트 */
+.card{transition:transform .3s var(--ease), box-shadow .3s var(--ease)}
+.card:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(27,42,87,.15)}
+/* 라이브 데모 배지 펄스(주목 유도) */
+@keyframes livePulse{0%,100%{box-shadow:0 4px 14px rgba(232,116,59,.45);transform:translateZ(0) scale(1)}50%{box-shadow:0 6px 24px rgba(232,116,59,.75);transform:translateZ(0) scale(1.05)}}
+.live-badge{animation:livePulse 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){
+  .slide.visible .wave,.live-badge{animation:none}
+  .cover .topbar{transition-duration:.3s}
+}
+
+/* ===========================================
+   NATIVE 도식 (코드 렌더 — 이미지 대체)
+   =========================================== */
+.dgram{background:#fff;justify-content:center;align-items:center;overflow:hidden}
+.dstage{width:1280px;height:720px;transform-origin:center center;flex:0 0 auto}
+.dcard{--navy:#1B2C5E;        
+    --navy2:#26407F;       
+    --blue:#3A5BA0;        
+    --blue-l:#E8EEFA;      
+    --blue-l2:#D6E2F5;
+    --ember:#E8772E;       
+    --ember-l:#FCEBDD;
+    --ink:#1F2733;
+    --muted:#6B7890;
+    --line:#C9D6EC;
+    --code-bg:#16233F;
+    --code-key:#8FB6FF;
+    --code-str:#F2B27A;
+    --code-com:#7E8DA8;
+    --page:#EEF1F6;font-family:'Pretendard',sans-serif;width:1280px;height:720px;background:#fff;overflow:hidden;padding:64px 72px;position:relative;color:var(--ink)}
+.dcard::after{content:"";position:absolute;left:0;right:0;bottom:-60px;height:160px;
+         background:radial-gradient(120% 100% at 50% 0,var(--blue-l) 0,transparent 70%);opacity:.7}
+.dcard .eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:8px}
+.dcard .eyebrow .num{background:var(--navy);color:#fff;font-weight:800;font-size:15px;
+         width:42px;height:42px;border-radius:50%;display:grid;place-items:center}
+.dcard .eyebrow .sec{color:var(--blue);font-weight:700;font-size:18px;letter-spacing:.04em}
+.dcard h1{color:var(--navy);font-size:40px;font-weight:800;margin-bottom:8px}
+.dcard .sub{color:var(--muted);font-size:19px;font-weight:500;margin-bottom:34px}
+.dcard .box{border-radius:14px;padding:16px 20px;font-weight:700;text-align:center;line-height:1.35;position:relative;z-index:2}
+.dcard .b-soft{background:var(--blue-l);color:var(--navy);border:1.5px solid var(--line)}
+.dcard .b-navy{background:var(--navy);color:#fff}
+.dcard .box .t{font-size:22px}
+.dcard .box .d{font-size:15px;font-weight:500;margin-top:5px;opacity:.85}
+.dcard .b-navy .d{color:#C7D4EE}
+.dcard .arrow{display:flex;align-items:center;color:var(--blue);flex:0 0 auto;z-index:2}
+.dcard .arrow svg{width:38px;height:24px}
+.dcard .arrow.lbl{flex-direction:column;gap:2px}
+.dcard .arrow .cap{font-size:12px;color:var(--muted);font-weight:600}
+.dcard .b-ember{background:#fff;color:var(--ember);border:2px solid var(--ember)}
+.dcard .b-ember .d{color:#C26528}
+.dcard .flow{display:flex;align-items:center;gap:16px;margin-top:48px;position:relative}
+.dcard .col{flex:0 0 auto;width:132px}
+.dcard .ar{display:flex;flex-direction:column;align-items:center;color:var(--blue);flex:0 0 auto;z-index:2}
+.dcard .ar .cap{font-size:12.5px;color:var(--ember);font-weight:800;margin-bottom:6px;white-space:nowrap}
+.dcard .ar svg{width:44px;height:22px}
+.dcard .llm{flex:0 0 auto;border:2.5px solid var(--navy);border-radius:18px;padding:30px 22px 22px;position:relative;background:#fff;z-index:2}
+.dcard .llm .tag{position:absolute;top:-16px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:4px 24px;border-radius:20px;font-weight:800;font-size:18px;letter-spacing:.03em}
+.dcard .role{width:242px;border-radius:12px;padding:15px 18px;text-align:center;border:1.5px solid var(--line)}
+.dcard .role-a{background:var(--blue-l)}
+.dcard .role-b{background:#fff}
+.dcard .role .t{font-size:25px;font-weight:800;color:var(--navy)}
+.dcard .role .d{font-size:14.5px;font-weight:500;margin-top:3px;color:var(--blue)}
+.dcard .divider{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13.5px;font-weight:700;margin:10px 0;justify-content:center}
+.dcard .divider::before, .dcard .divider::after{content:"";height:1px;flex:1;background:var(--line)}
+.dcard .note{position:absolute;bottom:42px;left:72px;color:var(--muted);font-size:14.5px;font-weight:600;z-index:2}
+.dcard .note b{color:var(--navy)}
+.dcard .dref{position:absolute;bottom:40px;right:72px;color:#9AA7BD;font-size:15px;font-weight:600;z-index:2}
+.dcard .so{display:grid;grid-template-columns:430px 70px 1fr;align-items:center;gap:8px;margin-top:18px}
+.dcard .chat{display:flex;flex-direction:column;gap:12px}
+.dcard .bub{max-width:340px;padding:13px 17px;border-radius:16px;font-size:18px;font-weight:500;line-height:1.45}
+.dcard .bub.q{background:var(--blue-l);color:var(--navy);border-bottom-left-radius:5px;align-self:flex-start}
+.dcard .bub.a{background:var(--navy);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.dcard .bub .who{display:block;font-size:12px;font-weight:700;opacity:.6;margin-bottom:3px}
+.dcard .vague{color:var(--ember);font-weight:700;font-size:12px;margin-left:6px}
+.dcard .conv{display:flex;flex-direction:column;align-items:center;color:var(--blue)}
+.dcard .conv .cap{font-size:14px;color:var(--muted);font-weight:700;margin-bottom:6px;writing-mode:vertical-rl;text-orientation:mixed}
+.dcard .code{background:var(--code-bg);border-radius:14px;padding:24px 26px;font-family:'SF Mono',ui-monospace,Menlo,monospace;
+        font-size:17.5px;line-height:1.75;color:#D7E0F2;box-shadow:0 8px 24px rgba(22,35,63,.3)}
+.dcard .code .hd{font-family:'Pretendard',sans-serif;color:#9FB2D6;font-size:13.5px;font-weight:600;
+        margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #2C3E63;letter-spacing:.02em}
+.dcard .k{color:var(--code-key)}
+.dcard .s{color:var(--code-str)}
+.dcard .c{color:var(--code-com)}
+.dcard .fn{color:#C7B6FF}
+.dcard .cap-b{text-align:center;margin-top:26px;color:var(--navy);font-weight:700;font-size:17px;position:relative;z-index:2}
+.dcard .cap-b em{color:var(--ember);font-style:normal}
+.dcard .classify{display:flex;align-items:center;gap:44px;margin-top:48px;position:relative;z-index:2}
+.dcard .ctag{display:inline-block;font-weight:800;border-radius:20px;padding:6px 20px;font-size:20px;margin-bottom:18px}
+.dcard .navy-tag{background:var(--navy);color:#fff}
+.dcard .soft-tag{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
+.dcard .hk{border:3px solid var(--navy);border-radius:20px;padding:22px 26px 26px;text-align:center}
+.dcard .hk-row{display:flex;align-items:stretch;gap:22px}
+.dcard .si{background:var(--blue-l);border:1.5px solid var(--line);border-radius:16px;padding:18px 22px 22px;text-align:center}
+.dcard .si-row{display:flex;gap:14px}
+.dcard .qbox{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:16px 18px;min-width:120px;color:var(--navy);font-weight:600;font-size:17px}
+.dcard .qbox b{display:block;font-size:25px;font-weight:800;margin-bottom:5px}
+.dcard .abox{background:var(--ember-l);border:2.5px solid var(--ember);border-radius:14px;padding:22px 26px;color:#C2641F;font-weight:700;font-size:18px;display:flex;flex-direction:column;justify-content:center}
+.dcard .abox b{display:block;font-size:27px;font-weight:800;margin-bottom:5px}
+.dcard .abox span{display:block;font-size:14.5px;font-weight:500;margin-top:2px}
+.dcard .general{background:#F0F2F6;border:1.5px solid #D5DCE8;border-radius:14px;padding:26px 30px;color:var(--muted);font-weight:700;font-size:20px;text-align:center}
+.dcard .general span{display:block;font-size:15.5px;font-weight:500;margin-top:4px}
+.dcard .stopcall{margin-top:34px;background:var(--ember-l);border:1.5px solid var(--ember);border-radius:14px;padding:16px 24px;position:relative;z-index:2;max-width:56rem}
+.dcard .stopcall-h{color:#C2641F;font-weight:800;font-size:19px;margin-bottom:5px}
+.dcard .stopcall-b{color:var(--ink);font-size:17px;line-height:1.5}
+.dcard .stopcall-b b{color:var(--navy);font-weight:800}
+.dcard .stopcall-note{display:block;color:var(--muted);font-size:14.5px;margin-top:3px}
+.dcard .sov2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
+.dcard .scard{background:var(--blue-l);border:1.5px solid var(--blue-l2);border-radius:16px;padding:26px 30px}
+.dcard .stag{display:inline-block;background:var(--blue);color:#fff;font-weight:800;font-size:20px;padding:5px 20px;border-radius:20px;margin-bottom:14px}
+.dcard .stxt{font-size:23px;font-weight:600;color:var(--navy);line-height:1.4}
+.dcard .stxt b{color:var(--blue)}
+.dcard .sov-result{margin-top:26px;text-align:center;font-size:22px;font-weight:700;color:var(--navy)}
+.dcard .sov-key{margin-top:24px;display:flex;align-items:center;gap:16px;background:var(--ember-l);border:2px solid var(--ember);border-radius:16px;padding:20px 28px}
+.dcard .sov-key-tag{flex:0 0 auto;background:var(--ember);color:#fff;font-weight:800;font-size:20px;padding:6px 20px;border-radius:20px}
+.dcard .sov-key-txt{font-size:24px;font-weight:700;color:var(--navy)}
+.dcard .sov-key-txt b{color:#C2641F}
+.dcard .ex2{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:26px}
+.dcard .excol{display:flex;flex-direction:column;gap:15px}
+.dcard .extag{align-self:flex-start;font-weight:800;font-size:18px;padding:6px 18px;border-radius:20px}
+.dcard .scale-tag{background:var(--blue-l);color:var(--navy);border:1.5px solid var(--line)}
+.dcard .intv-tag{background:var(--navy);color:#fff}
+.dcard .likert{background:#F7F9FE;border:1.5px solid var(--line);border-radius:14px;padding:16px 20px}
+.dcard .lq{font-weight:700;font-size:18.5px;color:var(--navy);margin-bottom:14px}
+.dcard .lscale{display:flex;align-items:center;gap:9px}
+.dcard .lend{font-size:11.5px;color:var(--muted);font-weight:600;text-align:center;line-height:1.15;flex:0 0 auto;width:34px}
+.dcard .lopt{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);color:var(--muted);font-weight:700;font-size:15px;display:grid;place-items:center;flex:0 0 auto}
+.dcard .lopt.sel{background:var(--navy);border-color:var(--navy);color:#fff}
+.dcard .exchat{display:flex;flex-direction:column;gap:11px}
+.dcard .exchat .bub{max-width:88%}
+.dcard .probe{color:var(--ember);font-weight:700;font-size:12px;background:#fff;padding:1px 7px;border-radius:8px;margin-left:5px}
+.dcard .exnote{margin-top:8px;font-size:14px;font-weight:700;color:var(--blue);text-align:center}
+.dcard .likert-intro{font-size:14.5px;color:var(--muted);font-weight:600;margin:-4px 0 2px}
+.dcard .lscale4{display:flex;gap:14px}
+.dcard .lopt4{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.dcard .lopt4 .lo{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);color:var(--muted);font-weight:700;font-size:17px;display:grid;place-items:center}
+.dcard .lopt4 .ll{font-size:12.5px;color:var(--muted);font-weight:600;text-align:center;line-height:1.15}
+.dcard .lopt4.sel .lo{background:var(--navy);border-color:var(--navy);color:#fff}
+.dcard .lopt4.sel .ll{color:var(--navy)}
+.dcard .role3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:42px}
+.dcard .rcard{border-radius:16px;padding:24px 26px;border:2px solid;display:flex;flex-direction:column;gap:14px}
+.dcard .rcard-llm{background:var(--blue-l);border-color:var(--blue)}
+.dcard .rcard-rule{background:#F5F7FC;border-color:var(--navy)}
+.dcard .rcard-human{background:var(--ember-l);border-color:var(--ember)}
+.dcard .rtag{align-self:flex-start;font-weight:800;font-size:22px;color:#fff;padding:6px 22px;border-radius:20px}
+.dcard .rcard-llm .rtag{background:var(--blue)}
+.dcard .rcard-rule .rtag{background:var(--navy)}
+.dcard .rcard-human .rtag{background:var(--ember)}
+.dcard .rlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+.dcard .rlist li{position:relative;padding-left:1.35em;font-size:22px;font-weight:600;color:var(--navy)}
+.dcard .rlist li::before{content:"";position:absolute;left:0;top:.5em;width:.5em;height:.5em;border-radius:50%}
+.dcard .rcard-llm .rlist li::before{background:var(--blue)}
+.dcard .rcard-rule .rlist li::before{background:var(--navy)}
+.dcard .rcard-human .rlist li::before{background:var(--ember)}
+.dcard .rnote{margin-top:auto;font-size:15px;color:var(--muted);font-weight:600;padding-top:10px;border-top:1px solid var(--line)}
+.dcard{opacity:0;transform:scale(1.03);transition:opacity .8s var(--ease), transform 1s var(--ease)}
+.slide.visible .dcard{opacity:1;transform:scale(1)}
+@media (prefers-reduced-motion: reduce){.dcard{transition-duration:.2s}}
+
+/* ===========================================
+   IMPACT 애니메이션 (카운트업 · 도식 순차 빌드 · 화살표 드로잉)
+   =========================================== */
+.countup{font-variant-numeric:tabular-nums}
+/* 도식 내부 순차 빌드 — style="--i:N"으로 순서 지정 */
+.dcard .dstep{opacity:0;transform:translateY(16px);transition:opacity .55s var(--ease), transform .55s var(--ease);transition-delay:calc(.35s + var(--i,0)*.22s)}
+.slide.visible .dcard .dstep{opacity:1;transform:none}
+/* 대화 버블 팝 (메신저 느낌 — 살짝 튀며 등장) */
+.dcard .dpop{opacity:0;transform:translateY(12px) scale(.9);transform-origin:bottom;transition:opacity .5s cubic-bezier(.34,1.56,.64,1), transform .5s cubic-bezier(.34,1.56,.64,1);transition-delay:calc(.35s + var(--i,0)*.22s)}
+.slide.visible .dcard .dpop{opacity:1;transform:none}
+/* SVG 화살표 드로잉 (선이 그어지듯) */
+.dcard .ar path, .dcard .conv path{stroke-dasharray:70;stroke-dashoffset:70;transition:stroke-dashoffset .7s ease;transition-delay:calc(.45s + var(--i,0)*.22s)}
+.slide.visible .dcard .ar path, .slide.visible .dcard .conv path{stroke-dashoffset:0}
+@media (prefers-reduced-motion: reduce){
+  .dcard .dstep,.dcard .dpop{transition-duration:.2s}
+  .dcard .ar path,.dcard .conv path{stroke-dasharray:none;transition:none}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="nav-dots" id="navDots" aria-label="슬라이드 내비게이션"></nav>
+<div class="khint">← → · Space · 스크롤</div>
+
+<!-- ============ 1. 표지 ============ -->
+<section class="slide cover">
+  <div class="topbar"></div>
+  <span class="pill reveal">2026 세계인문사회학술대회 · 소버린 AI</span>
+  <h1 class="reveal">사회적 고립의 측정과 예측</h1>
+  <div class="csub reveal">고전적 심리평가와 AI기반 평가</div>
+  <div class="cen reveal">Measuring and Predicting Social Isolation:<br>Classical Psychological Assessment versus AI-Based Assessment</div>
+  <div class="meta">
+    <div class="org">마음건강케이유</div>
+    <div class="when">2026. 7. 2.(목)<br><b style="color:var(--navy);font-size:1.1em">온안국</b></div>
+  </div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 2. 배경 확산 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">01</div><div><div class="sec">배경</div><h2 class="s-title">청년 사회적 고립의 확산</h2><div class="uline"></div></div></div>
+    <div class="body">
+      <div class="cards">
+        <div class="card reveal">
+          <img class="cimg" src="slide_images/stat1.png" alt="고립 비율 증가">
+          <div class="ctxt"><b>2년 새 2배</b> 증가<br>고립 청년 5.2% (2024)</div>
+        </div>
+        <div class="card reveal">
+          <img class="cimg" src="slide_images/stat2.png" alt="우울 78.2%">
+          <div class="ctxt">고립 청년 <b><span class="countup" data-target="78.2" data-suffix="%">0.0%</span></b><br>경도 이상 우울</div>
+        </div>
+        <div class="card reveal">
+          <div class="big"><span class="countup" data-target="75.4" data-suffix="%">0.0%</span></div>
+          <div class="ctxt">자살 사고 경험<br>그중 <span class="em"><span class="countup" data-target="26.7" data-suffix="%">0.0%</span></span> 자살 시도</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sref reveal">정세정 등(2025) · 피앤아이(2022) · 김성아 등(2023)</div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 3. 원인 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">02</div><div><div class="sec">배경</div><h2 class="s-title">고립의 원인: 구조적·심리적 요인</h2><div class="uline"></div></div></div>
+    <div class="body">
+      <div class="cards">
+        <div class="card soft reveal">
+          <div class="chead">구조적 요인 <span style="font-weight:500;font-size:.8em;color:var(--mut)">(사회·환경)</span></div>
+          <ul class="clist">
+            <li>불안정 고용·장시간 노동 → 소진·관계 단절</li>
+            <li>취업 지연·경제 공백 → 대인관계 축소</li>
+            <li>졸업·실업·지역 이동 → 소속 집단 상실</li>
+          </ul>
+        </div>
+        <div class="card soft reveal">
+          <div class="chead">심리적 요인 <span style="font-weight:500;font-size:.8em;color:var(--mut)">(개인 경험·기질)</span></div>
+          <ul class="clist">
+            <li>아동기 부정적 경험·정서조절 곤란 → 사회적 회피</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sref reveal">노가빈(2021) · 유민상(2021) · 조미형·고아라(2022) · Elliott(2005)</div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 4. 자살위험 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">03</div><div><div class="sec">배경</div><h2 class="s-title">고립은 자살 위험으로 이어진다</h2><div class="uline"></div></div></div>
+    <div class="body">
+      <ul class="bullets">
+        <li class="reveal">한국 자살률 <b>OECD 1위</b> · 청년 사망원인 1위</li>
+        <li class="reveal">고립 청년은 일반 청년보다 <b>자살 고위험군</b></li>
+        <li class="reveal">고립 청년의 <span class="em">75.4%</span> 자살 사고, <span class="em">26.7%</span> 자살 시도</li>
+        <li class="reveal">위기에도 도움 요청·서비스 이용 제한적 → <b>조기 포착 어려움</b></li>
+      </ul>
+    </div>
+  </div>
+  <div class="sref reveal">통계청(2024) · Baek &amp; Yoon(2025) · 김성아(2023) · Fong &amp; Yip(2023)</div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 5. 평가와 효율적 개입 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">04</div><div><div class="sec">해법</div><h2 class="s-title">평가와 효율적 개입</h2><div class="uline"></div></div></div>
+    <div class="body">
+      <ul class="bullets">
+        <li class="reveal">자살 위험으로 이어지므로, 핵심은 위험군을 <b>미리 식별</b>하는 것</li>
+        <li class="reveal">현행 체계는 위험이 드러난 뒤 대응하는 <b>반응적·사후</b> 구조</li>
+        <li class="reveal">위험이 표면화되기 전에 선제적으로 가려낼 <b>선별 체계</b>가 필요</li>
+        <li class="reveal">한정된 인적 자원 → 평가로 위험 수준을 가려 효율적으로 개입</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 6. 척도 vs 면접 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">05</div><div><div class="sec">해법</div><h2 class="s-title">고전 심리평가의 두 방식: 척도 vs 면담</h2><div class="uline"></div></div></div>
+    <div class="body">
+      <div class="cards">
+        <div class="card soft reveal">
+          <div class="chead">자기보고식 척도</div>
+          <div class="csub">예: PHQ-9, CES-D</div>
+          <ul class="clist">
+            <li>간편함, <b>표준화</b></li>
+            <li>한계: 고정 문항, 이해를 잘못하고 응답, 맥락 생략</li>
+          </ul>
+        </div>
+        <div class="card soft reveal">
+          <div class="chead">구조화된 면담</div>
+          <div class="csub">임상가가 직접 묻고 맥락을 판단</div>
+          <ul class="clist">
+            <li>맥락을 판단하고 모호하면 되물음 → 깊이 있는 평가</li>
+            <li>한계: 전문가 인력 필요, 실시간·대규모 대응 어려움</li>
+          </ul>
+        </div>
+      </div>
+      <div class="compare-cap reveal r2">→ 척도 = <b>표준화된 정량</b>　·　면접 = <b>임상가의 맥락적 판단</b></div>
+    </div>
+  </div>
+  <div class="sref reveal">Teo et al.(2018)</div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 6b. 예시 — 척도 vs 면접 (도식) ============ -->
+<section class="slide dgram">
+  <div class="dstage"><div class="dcard">
+  <div class="eyebrow"><span class="num">06</span><span class="sec">해법</span></div>
+  <h1>자기보고식 척도 vs 구조화된 면담</h1>
+  <div class="sub">예시로 보는 두 방식</div>
+
+  <div class="ex2">
+    <div class="excol">
+      <div class="extag scale-tag dstep" style="--i:0">자기보고식 우울 척도 · PHQ-9</div>
+      <div class="likert-intro">지난 2주간, 다음 문제로 얼마나 자주 불편했나요?</div>
+      <div class="likert dstep" style="--i:1">
+        <div class="lq">Q1. 일이나 여가 활동에 흥미·즐거움을 느끼지 못한다</div>
+        <div class="lscale4">
+          <div class="lopt4"><span class="lo">0</span><span class="ll">전혀<br>아님</span></div>
+          <div class="lopt4"><span class="lo">1</span><span class="ll">며칠<br>동안</span></div>
+          <div class="lopt4 sel"><span class="lo">2</span><span class="ll">일주일<br>이상</span></div>
+          <div class="lopt4"><span class="lo">3</span><span class="ll">거의<br>매일</span></div>
+        </div>
+      </div>
+      <div class="likert dstep" style="--i:2">
+        <div class="lq">Q2. 기분이 가라앉거나 우울하거나 희망이 없다고 느낀다</div>
+        <div class="lscale4">
+          <div class="lopt4"><span class="lo">0</span><span class="ll">전혀<br>아님</span></div>
+          <div class="lopt4"><span class="lo">1</span><span class="ll">며칠<br>동안</span></div>
+          <div class="lopt4"><span class="lo">2</span><span class="ll">일주일<br>이상</span></div>
+          <div class="lopt4 sel"><span class="lo">3</span><span class="ll">거의<br>매일</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="excol">
+      <div class="extag intv-tag dstep" style="--i:0">구조화 면접 · 우리 시스템</div>
+      <div class="exchat">
+        <div class="bub q dpop" style="--i:1">요즘 하루를 주로 어디서 보내세요?</div>
+        <div class="bub a dpop" style="--i:2">그냥 집에요… 가끔 편의점 정도?</div>
+        <div class="bub q dpop" style="--i:3">약속이나 외출은 한 주에 몇 번쯤?</div>
+        <div class="bub a dpop" style="--i:4">거의 없어요. 작년 여름부터요.</div>
+      </div>
+    </div>
+  </div>
+  </div></div>
+</section>
+
+<!-- ============ 7. 우리 접근 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">07</div><div><div class="sec">시스템</div><h2 class="s-title">면담을 LLM으로, 왜 적합한가</h2><div class="uline"></div></div></div>
+    <div class="body">
+      <ul class="bullets">
+        <li class="reveal"><b>구조화 면담</b>은 사람이 해도 정해진 질문·순서·채점 기준에 맞춰 정형 결과를 내는 <b>프로토콜 과제</b></li>
+        <li class="reveal"><b>표준화·반복·구조화</b> 출력 → <b>최근 LLM이 잘하고 있음</b></li>
+        <li class="reveal"><b>전문가 인력 부족</b>을 LLM으로 보완 (24시간·비대면·동시 다수)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="sref reveal">Boucher(2021) · Ferretti(2023) · Wies(2021)</div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 8. structured output (도식) ============ -->
+<section class="slide dgram">
+  <div class="dstage"><div class="dcard">
+  <div class="eyebrow"><span class="num">08</span><span class="sec">시스템</span></div>
+  <h1>Structured Output</h1>
+  <div class="sub">구조화된 답변</div>
+  <div class="dref">Boucher 2021 · Ferretti 2023 · Wies 2021</div>
+
+  <div class="so">
+    <div class="chat">
+      <div class="bub q dpop" style="--i:0"><span class="who">면접관</span>요즘 하루를 주로 어디서 보내세요?</div>
+      <div class="bub a dpop" style="--i:1"><span class="who">사용자</span>그냥 집에요… 가끔 편의점 정도?</div>
+      <div class="bub q dpop" style="--i:2"><span class="who">면접관 · 되묻기</span>약속이나 외출은 한 주에 몇 번쯤?</div>
+      <div class="bub a dpop" style="--i:3"><span class="who">사용자</span>거의 없어요. 작년 여름부터요.</div>
+    </div>
+
+    <div class="conv" style="--i:4">
+      <div class="cap dstep" style="--i:4">LLM 해석</div>
+      <svg width="56" height="26" viewBox="0 0 56 26"><path d="M2 13h46M40 5l10 8-10 8" fill="none" stroke="#3A5BA0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="code dstep" style="--i:5">
+      <div class="hd">scorecard_tool — 항상 같은 형식의 평가 기록</div>
+<span class="fn">scorecard_tool</span>(<br>
+&nbsp;&nbsp;<span class="k">action</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="s">"record"</span>,<br>
+&nbsp;&nbsp;<span class="k">question_id</span> = <span class="s">"A1"</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># 물리적 고립</span><br>
+&nbsp;&nbsp;<span class="k">status</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="s">"positive"</span>,&nbsp;<span class="c"># 충족</span><br>
+&nbsp;&nbsp;<span class="k">value</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="s">"집에 대부분 체류, 외출 거의 없음"</span>,<br>
+&nbsp;&nbsp;<span class="k">rationale</span>&nbsp;&nbsp;= <span class="s">"작년 여름부터 알바 외 외출 없음"</span>,<br>
+)
+    </div>
+  </div>
+  </div></div>
+</section>
+
+<!-- ============ 9. 자율성 / LLM 두 역할 (도식) ============ -->
+<section class="slide dgram">
+  <div class="dstage"><div class="dcard">
+  <div class="eyebrow"><span class="num">09</span><span class="sec">시스템</span></div>
+  <h1>시스템 구조 — LLM을 답변과 채점으로 분리</h1>
+  <div class="sub">LLM이 <b>답변(대화)</b>하는 곳과 <b>채점(평가)</b>하는 곳은 다르다.</div>
+
+  <div class="flow">
+    <div class="box b-soft col dstep" style="--i:0"><div class="t">질문<br>입력</div><div class="d">평가 문항</div></div>
+    <div class="ar" style="--i:1"><svg viewBox="0 0 44 22"><path d="M2 11h36M32 4l9 7-9 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="llm dstep" style="--i:2">
+      <span class="tag">LLM</span>
+      <div class="role role-a"><div class="t">답변</div><div class="d">대화 · 되묻기</div></div>
+      <div class="divider">서로 다른 역할</div>
+      <div class="role role-b"><div class="t">채점</div><div class="d">답변 평가 · 기입</div></div>
+    </div>
+
+    <div class="ar" style="--i:3"><svg viewBox="0 0 44 22"><path d="M2 11h36M32 4l9 7-9 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="box b-navy col dstep" style="--i:4"><div class="t">리포트<br>생성</div><div class="d">결과 정리</div></div>
+    <div class="ar" style="--i:5"><svg viewBox="0 0 44 22"><path d="M2 11h36M32 4l9 7-9 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="box b-ember col dstep" style="--i:6"><div class="t">전문가<br>검토·확정</div><div class="d">사람</div></div>
+  </div>
+  </div></div>
+</section>
+
+<!-- ============ 10. 분류 (도식) ============ -->
+<section class="slide dgram">
+  <div class="dstage"><div class="dcard">
+  <div class="eyebrow"><span class="num">10</span><span class="sec">시스템</span></div>
+  <h1>LLM을 규칙 기반으로 통제</h1>
+  <div class="sub">구조화된 채점 방식에 규칙 기반을 도입</div>
+  <div class="dref">Kato et al. 2019 · Teo et al. 2018</div>
+
+  <div class="classify">
+    <div class="hk">
+      <span class="ctag navy-tag">히키코모리 = A + B + C + D</span>
+      <div class="hk-row">
+        <div class="si dstep" style="--i:0">
+          <span class="ctag soft-tag">사회적 고립 = B + C + D</span>
+          <div class="si-row">
+            <div class="qbox"><b>B</b>관계 단절</div>
+            <div class="qbox"><b>C</b>지지 부재</div>
+            <div class="qbox"><b>D</b>고통·기능 손상</div>
+          </div>
+        </div>
+        <div class="abox dstep" style="--i:1"><b>A</b>물리적 고립<span>공간적 은둔</span></div>
+      </div>
+    </div>
+    <div class="general dstep" style="--i:2">일반<span>기준 미충족</span></div>
+  </div>
+  <div class="stopcall dstep" style="--i:3">
+    <div class="stopcall-h">조기종료 — 규칙이 흐름을 통제</div>
+    <div class="stopcall-b"><b>A · B · C 모두 미충족</b> → 시스템이 즉시 <b>'일반'</b>으로 종료 · 남은 질문 건너뜀<span class="stopcall-note">LLM에게 "멈춰"라 지시하는 게 아니라 — 규칙이 판정 → 시스템이 종료를 강제</span></div>
+  </div>
+  </div></div>
+</section>
+
+<!-- ============ 11. 실제 작동 흐름 ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="ahead reveal"><div class="badge">11</div><div><div class="sec">시스템</div><h2 class="s-title">실제 작동 흐름: 대화 → 판정 → 전문가 검토</h2><div class="uline"></div></div></div>
+    <div class="flowimg reveal r2">
+      <a class="livelink" href="http://localhost:5173" target="_blank" rel="noopener" title="실제 시스템 열기 (localhost:5173)">
+        <img src="slide_images/flow.png" alt="실제 작동 흐름 — 클릭하면 실제 시스템">
+        <span class="live-badge">▶ 라이브 데모</span>
+      </a>
+    </div>
+  </div>
+  <div class="sref reveal">이미지 클릭 → 실제 시스템 · 사용자 답변 → LLM 판단 → 채점·기입 → 검증 → DB 저장 → 전문가 검토</div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 12. 결론 ============ -->
+<section class="slide dgram">
+  <div class="dstage"><div class="dcard">
+  <div class="eyebrow"><span class="num">12</span><span class="sec">결론</span></div>
+  <h1>결론 — AI에서 역할을 나눈다</h1>
+  <div class="sub">무엇을 <b>LLM에 · 규칙에 · 사람에</b> 맡길지, 과제에 맞게 나눈다</div>
+
+  <div class="role3">
+    <div class="rcard rcard-llm dstep" style="--i:0">
+      <div class="rtag">LLM</div>
+      <ul class="rlist"><li>채점</li><li>답변</li><li>가벼운 공감</li><li>해석</li></ul>
+      <div class="rnote">유연성이 필요한 언어·판단</div>
+    </div>
+    <div class="rcard rcard-rule dstep" style="--i:1">
+      <div class="rtag">규칙 기반</div>
+      <ul class="rlist"><li>구조화된 채점의 순서</li><li>중단</li><li>분류</li></ul>
+      <div class="rnote">일관성·재현성이 필요한 통제</div>
+    </div>
+    <div class="rcard rcard-human dstep" style="--i:2">
+      <div class="rtag">사람</div>
+      <ul class="rlist"><li>최종 검토</li><li>확정</li><li>참조</li></ul>
+      <div class="rnote">책임·신뢰가 필요한 결정</div>
+    </div>
+  </div>
+  </div></div>
+</section>
+
+<!-- ============ 13. 향후 — 소버린 AI (도식) ============ -->
+<section class="slide dgram">
+  <div class="dstage"><div class="dcard">
+  <div class="eyebrow"><span class="num">13</span><span class="sec">향후</span></div>
+  <h1>소버린 AI</h1>
+  <div class="sub">민감한 데이터를 기관 안에서 다룬다</div>
+
+  <div class="sov2">
+    <div class="scard dstep" style="--i:0">
+      <div class="stag">채점 능력 ↑</div>
+      <div class="stxt">핵심 태스크는 <b>파인튜닝</b>으로 특화·강화</div>
+    </div>
+    <div class="scard dstep" style="--i:1">
+      <div class="stag">간단한 답변</div>
+      <div class="stxt"><b>작은 모델</b>로 경량 처리</div>
+    </div>
+  </div>
+
+  <div class="sov-result dstep" style="--i:2">→ 특정 태스크는 <b>기관 내에서 충분히 관리</b> · 민감 데이터를 외부로 내보내지 않는다</div>
+
+  <div class="sov-key dpop" style="--i:3">
+    <span class="sov-key-tag">핵심</span>
+    <span class="sov-key-txt">기관이 원하는 <b>용도에 맞게 파인튜닝</b>이 필요할 것으로 생각됨</span>
+  </div>
+  </div></div>
+</section>
+
+<!-- ============ 14. 클로징 ============ -->
+<section class="slide closing">
+  <div class="cwrap">
+    <h1 class="reveal">감사합니다</h1>
+    <div class="ckey reveal">LLM과 사람의 <b>역할을 나누는 것</b>이 중요</div>
+  </div>
+  <div class="wave"></div>
+</section>
+
+<!-- ============ 15. 참고문헌 ============ -->
+<section class="slide refslide">
+  <div class="pad">
+    <div class="reftitle reveal"><div class="dot"></div><h2>참고문헌</h2></div>
+    <div class="uline reveal" style="margin-bottom:.4rem"></div>
+    <div class="refcols">
+      <div class="refcol reveal">
+        <h3>국문</h3>
+        <ul>
+          <li>김성아 등(2023). 고립·은둔 청년 실태조사 연구. 한국보건사회연구원.</li>
+          <li>노가빈·이소민·김제희(2021). 청년 은둔형 외톨이의 경험과 발생원인. 한국사회복지학, 73(2).</li>
+          <li>유민상·신동훈·이민정(2021). 청년의 사회적 고립 실태 및 지원 방안. 한국청소년정책연구원.</li>
+          <li>정세정 등(2025). 2024년 청년 삶 실태조사. 한국보건사회연구원.</li>
+          <li>조미형·고아라(2022). 사회적 고립 청년은 누구인가? 한국사회복지학, 74(4).</li>
+          <li>통계청(2024). 2023년 사망원인통계 결과.</li>
+          <li>피앤아이(2022). 서울시 고립·은둔 청년 실태조사 결과 보고서. 서울특별시.</li>
+        </ul>
+      </div>
+      <div class="refcol en reveal r2">
+        <h3>영문</h3>
+        <ul>
+          <li>Baek &amp; Yoon (2025). Prolonged social withdrawal... J Affect Disord, 381.</li>
+          <li>Boucher et al. (2021). AI chatbots in digital mental health. Expert Rev Med Devices, 18.</li>
+          <li>Choi et al. (2025). Unmet Health Care Use Among Socially Withdrawn Youth. JMIR.</li>
+          <li>Elliott et al. (2005). Child physical abuse and self-perceived isolation. J Interpers Violence, 20.</li>
+          <li>Ferretti et al. (2023). Global youth perspectives on digital health. BMC Digit Health, 1.</li>
+          <li>Fong &amp; Yip (2023). Prevalence of hikikomori... Int J Soc Psychiatry, 69.</li>
+          <li>Holt-Lunstad et al. (2015). Loneliness and social isolation as risk factors. Perspect Psychol Sci, 10.</li>
+          <li>Kato, Kanba &amp; Teo (2019). Hikikomori: Multidimensional understanding. Psychiatry Clin Neurosci, 73.</li>
+          <li>Teo et al. (2018). The 25-item Hikikomori Questionnaire (HQ-25). Psychiatry Clin Neurosci, 72.</li>
+          <li>Wies, Landers &amp; Ienca (2021). Digital mental health for young people. Front Digit Health, 3.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ===========================================
+   SLIDE CONTROLLER — 키보드/스크롤/터치/도트
+   =========================================== */
+class Deck{
+  constructor(){
+    this.slides=[...document.querySelectorAll('.slide')];
+    this.cur=0;
+    this.progress=document.getElementById('progress');
+    this.dotWrap=document.getElementById('navDots');
+    this.buildDots();
+    this.observe();
+    this.keys();
+    this.touch();
+    this.wheelNav();
+    this.fitDiagrams();
+    window.addEventListener('resize',()=>this.fitDiagrams());
+    this.countups();
+    this.onScroll();
+    window.addEventListener('scroll',()=>this.onScroll(),{passive:true});
+  }
+  buildDots(){
+    this.dotWrap.innerHTML='';   // 재오픈 시 중복 방지
+    this.slides.forEach((_,i)=>{
+      const b=document.createElement('button');
+      b.setAttribute('aria-label',`슬라이드 ${i+1}`);
+      b.addEventListener('click',()=>this.go(i));
+      this.dotWrap.appendChild(b);
+    });
+    this.dots=[...this.dotWrap.children];
+  }
+  observe(){
+    const io=new IntersectionObserver((es)=>{
+      es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+    },{threshold:0.35});
+    this.slides.forEach(s=>io.observe(s));
+  }
+  go(i){
+    this.cur=Math.max(0,Math.min(this.slides.length-1,i));
+    this.slides[this.cur].scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  keys(){
+    document.addEventListener('keydown',(e)=>{
+      if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.go(this.cur+1);}
+      else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.cur-1);}
+      else if(e.key==='Home'){e.preventDefault();this.go(0);}
+      else if(e.key==='End'){e.preventDefault();this.go(this.slides.length-1);}
+    });
+  }
+  touch(){
+    let y0=null;
+    document.addEventListener('touchstart',e=>{y0=e.touches[0].clientY;},{passive:true});
+    document.addEventListener('touchend',e=>{
+      if(y0===null)return;
+      const dy=y0-e.changedTouches[0].clientY;
+      if(Math.abs(dy)>50) this.go(this.cur+(dy>0?1:-1));
+      y0=null;
+    },{passive:true});
+  }
+  countups(){
+    /* 슬라이드가 보이면 .countup 숫자를 0 → 목표값으로 카운트업 (ease-out, 1회만) */
+    const run=(el)=>{
+      if(el.dataset.done) return; el.dataset.done='1';
+      const t=parseFloat(el.dataset.target), dec=(el.dataset.target.split('.')[1]||'').length,
+            suf=el.dataset.suffix||'', dur=1400, t0=performance.now()+300;
+      const tick=(now)=>{
+        const p=Math.min(1,Math.max(0,(now-t0)/dur)), v=t*(1-Math.pow(1-p,3));
+        el.textContent=v.toFixed(dec)+suf;
+        if(p<1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const io=new IntersectionObserver((es)=>{
+      es.forEach(e=>{ if(e.isIntersecting) e.target.querySelectorAll('.countup').forEach(run); });
+    },{threshold:0.4});
+    this.slides.forEach(s=>{ if(s.querySelector('.countup')) io.observe(s); });
+  }
+  fitDiagrams(){
+    const s=Math.min(window.innerWidth/1280, window.innerHeight/720);
+    document.querySelectorAll('.dstage').forEach(el=>{ el.style.transform='scale('+s+')'; });
+  }
+  wheelNav(){
+    /* 고정 쿨다운 방식 — 타이머를 리셋하지 않으므로 연속 스크롤로도 계속 넘어감.
+       한 번 이동 후 쿨다운이 지나면 다음 스크롤에 다시 이동. 관성 꼬리는 임계값으로 무시. */
+    let last=0;
+    window.addEventListener('wheel',(e)=>{
+      e.preventDefault();
+      if(Math.abs(e.deltaY)<12) return;   // 미세 이동·관성 꼬리 무시
+      const now=Date.now();
+      if(now-last<480) return;            // 이동 간 최소 간격(리셋 없음 → 계속 넘김 가능)
+      last=now;
+      this.go(this.cur + (e.deltaY>0?1:-1));
+    },{passive:false});
+  }
+  onScroll(){
+    const h=window.innerHeight;
+    let idx=Math.round(window.scrollY/h);
+    idx=Math.max(0,Math.min(this.slides.length-1,idx));
+    this.cur=idx;
+    const max=(this.slides.length-1)*h||1;
+    this.progress.style.width=(window.scrollY/max*100)+'%';
+    this.dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+  }
+}
+new Deck();
+</script>
+</body>
+</html>
